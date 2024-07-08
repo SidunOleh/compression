@@ -13,7 +13,7 @@ class RLE
                 $str[$i] !== ($str[$i+1] ?? null) or 
                 $count == 255
             ) {
-                $encoded .= pack('C', $count) . $str[$i];
+                $encoded .= $str[$i] . pack('C', $count);
                 $count = 0;
             }
         }
@@ -25,7 +25,7 @@ class RLE
     {
         $decoded = '';
         for ($i=0; $i < strlen($str); $i=$i+2) { 
-            $decoded .= str_repeat($str[$i+1], unpack('C', $str[$i])[1]);
+            $decoded .= str_repeat($str[$i], unpack('C', $str[$i+1])[1]);
         }
 
         return $decoded;
