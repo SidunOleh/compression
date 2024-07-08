@@ -25,6 +25,6 @@ class ReadBin
 
         $this->index++;
 
-        return ord($byte) == (ord($byte) | (1 << 7 - $bitNumber)) ? 1 : 0;
+        return ord($byte) & (1 << 7 - $bitNumber) ? 1 : 0;
     }
 }
