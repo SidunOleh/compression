@@ -8,14 +8,15 @@ class WriteBin
 
     private $index = 0;
 
-    public function writeBits(string $str): void
+    public function writeBits(string $bits): void
     {
-        for ($i=0; $i < strlen($str); $i++) { 
-            $bit = (bool) $str[$i];
+        for ($i=0; $i < strlen($bits); $i++) { 
+            $bit = (bool) $bits[$i];
             
             if ($bit) {
-                $mask = 1 << (7 - $this->index);
-                $this->byte = pack('C', unpack('C', $this->byte)[1] | $mask);
+                $this->setCurrentBit();
+            } else {
+                $this->resetCurrentBit();
             }
 
             $this->index++;
@@ -26,6 +27,26 @@ class WriteBin
                 $this->index = 0;
             }
         }
+    }
+
+    public function setCurrentBit(): void
+    {
+        $mask = 1 << (7 - $this->index);
+
+        $byte = unpack('C', $this->byte)[1];
+        $byte |= $mask;
+
+        $this->byte = pack('C', $byte);
+    }
+
+    public function resetCurrentBit(): void
+    {
+        $mask = 255 ^ (1 << (7 - $this->index));
+
+        $byte = unpack('C', $this->byte)[1];
+        $byte &= $mask;
+
+        $this->byte = pack('C', $byte);
     }
 
     public function getData(): string

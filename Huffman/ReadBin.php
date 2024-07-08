@@ -20,11 +20,13 @@ class ReadBin
         }
         
         $byte = substr($this->data, $bytesOffset, 1);
-        
+
         $bitNumber = $this->index - $bytesOffset * 8;
+        $mask = 1 << (7 - $bitNumber);
+        $bit = ord($byte) & $mask ? 1 : 0;
 
         $this->index++;
 
-        return ord($byte) & (1 << 7 - $bitNumber) ? 1 : 0;
+        return $bit;
     }
 }
